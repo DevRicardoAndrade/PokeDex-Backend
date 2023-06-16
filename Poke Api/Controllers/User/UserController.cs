@@ -150,8 +150,8 @@ namespace Poke_Api.Controllers.User
                 
             }
         }
-
-        [HttpPut("{id:int}")]
+        [JwtAuthorize]
+        [HttpPut("/api/user/edit/{id:int}")]
         public async Task<IActionResult> UpdateNameOrPassword([FromBody] UserModel user, int id)
         {
             try

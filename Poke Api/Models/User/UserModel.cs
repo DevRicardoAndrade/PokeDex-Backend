@@ -18,8 +18,12 @@ namespace Poke_Api.Models.User
         [StringLength(100)]
         public string? Email { get; set; }
         [StringLength(20)]
+        [Required(ErrorMessage = "Password id required")]
+        [MinLength(8, ErrorMessage = "Password must be at least 8 characters long")]
         public string? Password { get; set; }
         [StringLength(20)]
+        [Required(ErrorMessage = "UserName id required")]
+        [MinLength(4, ErrorMessage = "Username must be at least 4 characters long")]
         public string? UserName { get; set; }
         public IEnumerable<RuleModel>? Rules { get; set; }
 
