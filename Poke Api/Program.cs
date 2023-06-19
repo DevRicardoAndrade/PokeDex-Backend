@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Poke_Api.Context;
+using Poke_Api.Repositories.Pokemon;
 using Poke_Api.Repositories.User;
 using Poke_Api.Services;
 using Poke_Api.Utils;
@@ -26,6 +27,7 @@ builder.Services.AddSwaggerGen( s =>
 
 //Depency Injection
 builder.Services.AddScoped<IUser, User>();
+builder.Services.AddScoped<IPokemon, Pokemon>();    
 builder.Services.AddSingleton<AuthenticationService>();
 
 var app = builder.Build();

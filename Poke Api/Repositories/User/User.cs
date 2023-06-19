@@ -42,6 +42,7 @@ namespace Poke_Api.Repositories.User
                 UserModel? userSelected = await _context.Users
                     .AsNoTracking()   
                     .Include(u => u.Rules)
+                    .Include(u => u.PokemonFavorited)
                     .FirstOrDefaultAsync(u => u.Id == id);
                 return userSelected;
             }

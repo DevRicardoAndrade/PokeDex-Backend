@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Poke_Api.Models.Pokemon;
 using Poke_Api.Models.Rules;
 using Poke_Api.Models.User;
 
@@ -14,6 +15,7 @@ namespace Poke_Api.Context
 
         public DbSet<UserModel> Users { get; set; } 
         public DbSet<RuleModel> Rules { get; set; }
+        public DbSet<PokemonModel> Pokemons { get; set; }   
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

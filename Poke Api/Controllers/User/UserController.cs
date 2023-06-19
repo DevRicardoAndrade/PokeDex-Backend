@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Poke_Api.Models.User;
 using Poke_Api.Repositories.User;
 using Poke_Api.Utils;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using System;
 
 namespace Poke_Api.Controllers.User
 {
@@ -16,6 +19,7 @@ namespace Poke_Api.Controllers.User
             _user = user;
         }
 
+        [JwtAuthorize]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -68,6 +72,13 @@ namespace Poke_Api.Controllers.User
                 UserModel? userSelected = await _user.Me(token);
                 if (userSelected != null)
                 {
+                    var options = new JsonSerializerOptions
+                    {
+                        ReferenceHandler = ReferenceHandler.Preserve
+                    };
+
+                    var jsonString = JsonSerializer.Serialize(userSelected, options);
+
                     return Ok(userSelected);
                 }
                 else

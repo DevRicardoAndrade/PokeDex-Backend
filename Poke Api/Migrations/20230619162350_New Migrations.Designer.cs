@@ -11,8 +11,8 @@ using Poke_Api.Context;
 namespace Poke_Api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230613125155_Implemented Rules")]
-    partial class ImplementedRules
+    [Migration("20230619162350_New Migrations")]
+    partial class NewMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,32 @@ namespace Poke_Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Poke_Api.Models.Pokemon.PokemonModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<int>("idPokemon")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pokemons");
+                });
 
             modelBuilder.Entity("Poke_Api.Models.Rules.RuleModel", b =>
                 {
@@ -59,10 +85,12 @@ namespace Poke_Api.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
@@ -70,9 +98,24 @@ namespace Poke_Api.Migrations
 
                     b.HasIndex("Email", "UserName")
                         .IsUnique()
-                        .HasFilter("[Email] IS NOT NULL AND [UserName] IS NOT NULL");
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("PokemonModelUserModel", b =>
+                {
+                    b.Property<int>("PokemonFavoritedId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserFavoritedId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PokemonFavoritedId", "UserFavoritedId");
+
+                    b.HasIndex("UserFavoritedId");
+
+                    b.ToTable("PokemonModelUserModel");
                 });
 
             modelBuilder.Entity("UserRule", b =>
@@ -88,6 +131,21 @@ namespace Poke_Api.Migrations
                     b.HasIndex("RuleId");
 
                     b.ToTable("UserRule");
+                });
+
+            modelBuilder.Entity("PokemonModelUserModel", b =>
+                {
+                    b.HasOne("Poke_Api.Models.Pokemon.PokemonModel", null)
+                        .WithMany()
+                        .HasForeignKey("PokemonFavoritedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Poke_Api.Models.User.UserModel", null)
+                        .WithMany()
+                        .HasForeignKey("UserFavoritedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("UserRule", b =>

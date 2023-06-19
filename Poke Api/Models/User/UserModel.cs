@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Poke_Api.Models.Pokemon;
 using Poke_Api.Models.Rules;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,6 +27,7 @@ namespace Poke_Api.Models.User
         [MinLength(4, ErrorMessage = "Username must be at least 4 characters long")]
         public string? UserName { get; set; }
         public IEnumerable<RuleModel>? Rules { get; set; }
+        public ICollection<PokemonModel>? PokemonFavorited { get; set; }
 
     }
 }
