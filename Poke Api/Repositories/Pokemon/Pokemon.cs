@@ -81,6 +81,29 @@ namespace Poke_Api.Repositories.Pokemon
                 throw new Exception(e.Message);
             }
         }
+        public async Task<PokemonModel> UnfavoritePokemonAsync(PokemonModel model, string token)
+        {
+            try
+            {
+                int UserId = _auth.IdByToken(token);
+                PokemonModel pokemonExisting = await _context.Pokemons.FirstOrDefaultAsync(p => p.idPokemon == model.idPokemon);
+                if (pokemonExisting == null)
+                {
+                    throw new Exception("Pokemon Favorited not found");
+                }
+                pokemonExisting = await _context.Pokemons.FirstOrDefaultAsync(p => p.idPokemon == model.idPokemon);
+                string sqlQuery = "DELETE FROM PokemonModelUserModel WHERE PokemonFavoritedId = @Pokemon";
+                await _context.Database.ExecuteSqlRawAsync(sqlQuery, new[] {
+                            new SqlParameter("@Pokemon", pokemonExisting.Id)
+                        });
+                return pokemonExisting;
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception(e.Message);
+            }
+        }
         public async Task<PokemonModel[]> GetFavoriteAsync(string token)
         {
             try
@@ -98,7 +121,7 @@ namespace Poke_Api.Repositories.Pokemon
                         }
                     });
                 });
-                return pokemons.ToArray();
+                return pokemonsReturn.ToArray();
             }
             catch (Exception e)
             {

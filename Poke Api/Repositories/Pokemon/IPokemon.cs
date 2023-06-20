@@ -11,5 +11,6 @@ namespace Poke_Api.Repositories.Pokemon
         public Task<PokemonModel[]> GetPokemonsAsync();
         public Task<PokemonModel[]> GetFavoriteAsync(string token);
         public Task<PokemonModel> SetFavoritePokemons(PokemonModel model, string token);
+        public Task<PokemonModel> UnfavoritePokemonAsync(PokemonModel model, string token);
     }
 }

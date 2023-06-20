@@ -115,7 +115,7 @@ namespace Poke_Api.Controllers.Pokemon
             }
         }
         [JwtAuthorize]
-        [HttpPost("/favorite")]
+        [HttpPost("/api/pokemon/favorite")]
         public async Task<IActionResult> Favorite([FromBody] PokemonModel model)
         {
             try
@@ -137,13 +137,35 @@ namespace Poke_Api.Controllers.Pokemon
             }
         }
         [JwtAuthorize]
-        [HttpGet("/favorite")]
+        [HttpGet("/api/pokemon/favorite")]
         public async Task<IActionResult> Favorite()
         {
             try
             {
                 string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
                 PokemonModel[]? pokemonFavorited = await _pokemon.GetFavoriteAsync( token);
+                if (pokemonFavorited != null)
+                {
+                    return Ok(pokemonFavorited);
+                }
+                else
+                {
+                    return NotFound("Error");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+        [JwtAuthorize]
+        [HttpPost("/api/pokemon/unfavorite")]
+        public async Task<IActionResult> Unfavorite([FromBody] PokemonModel model)
+        {
+            try
+            {
+                string token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+                PokemonModel? pokemonFavorited = await _pokemon.UnfavoritePokemonAsync(model,token);
                 if (pokemonFavorited != null)
                 {
                     return Ok(pokemonFavorited);
